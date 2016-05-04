@@ -113,6 +113,7 @@ void pulso()
   }
      
   ledFadeToBeat();                      // Makes the LED Fade Effect Happen 
+  archivo.println(QS);
   delay(20);                             //  take a break
 }
 
