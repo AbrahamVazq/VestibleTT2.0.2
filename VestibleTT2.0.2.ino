@@ -113,6 +113,17 @@ void pulso()
   }
      
   ledFadeToBeat();                      // Makes the LED Fade Effect Happen 
+
+   /* Re-abrimos el archivo para lectura */
+  if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END)) 
+  {
+    sd.errorHalt("opening test.txt for write failed");
+  }
+  else
+  {
+    digitalWrite(3, HIGH);
+  }
+  
   archivo.println(QS);
   delay(20);                             //  take a break
 }
@@ -138,12 +149,16 @@ void temperatura()
     Serial.print(+ ":");
     Serial.print(second(t));
     Serial.print("\n");
-    digitalWrite(3, HIGH);
+    
     
    /* Re-abrimos el archivo para lectura */
   if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END)) 
   {
     sd.errorHalt("opening test.txt for write failed");
+  }
+  else
+  {
+    digitalWrite(3, HIGH);
   }
   
   /*Si el archivo se abrio correctamente, escribimos en el */
@@ -171,6 +186,7 @@ void interrumpe()
     delay(500);
     digitalWrite(7,LOW);
     Serial.println(+ "]");
+    Serial.println("Pausando escritura de Archivo en un bloque e iniciando otro.");
     Serial.println(+ "[");
     archivo.println(+ "]");
     archivo.println(+ "[");
