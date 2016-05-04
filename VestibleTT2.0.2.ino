@@ -22,9 +22,6 @@ int botonPin = 8;                 // Pin donde leera el boton de pausa
 
 // Volatile Variables, used in the interrupt service routine!
 volatile int BPM;                   // int that holds raw Analog in 0. updated every 2mS
-volatile int Signal;                // holds the incoming raw data
-volatile int IBI = 600;             // int that holds the time interval between beats! Must be seeded! 
-volatile boolean Pulse = false;     // "True" when User's live heartbeat is detected. "False" when not a "live beat". 
 volatile boolean QS = false;        // becomes true when Arduoino finds a beat.
 
 // Regards Serial OutPut  -- Set This Up to your needs
@@ -32,6 +29,7 @@ static boolean serialVisual = true;   // Set to 'false' by Default.  Re-set to '
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+void setup(){
 void setup()
 {
   
@@ -44,6 +42,7 @@ void setup()
   interruptSetup();                 // sets up to read Pulse Sensor signal every 2mS 
    // IF YOU ARE POWERING The Pulse Sensor AT VOLTAGE LESS THAN THE BOARD VOLTAGE, 
    // UN-COMMENT THE NEXT LINE AND APPLY THAT VOLTAGE TO THE A-REF PIN
+//   analogReference(EXTERNAL);   
 //   analogReference(EXTERNAL); 
 
   // Initialize SdFat or print a detailed error message and halt
@@ -70,37 +69,17 @@ void setup()
 }
 
 
+//  Where the Magic Happens
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void loop()
 {
   
     serialOutput() ;       
+
     Pulso();
                             //  take a break
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void ledFadeToBeat()
-{
-    fadeRate -= 15;                         //  set LED fade value
-    fadeRate = constrain(fadeRate,0,255);   //  keep LED fade value from going into negative numbers!
-    analogWrite(fadePin,fadeRate);          //  fade LED
-  }
-  
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-void Pulso()
-{
-    if (QS == true)
-    {     // A Heartbeat Was Found
-                       // BPM and IBI have been Determined
-                       // Quantified Self "QS" true when arduino finds a heartbeat
-        fadeRate = 255;         // Makes the LED Fade Effect Happen
-                                // Set 'fadeRate' Variable to 255 to fade LED with pulse
-        serialOutputWhenBeatHappens();   // A Beat Happened, Output that to serial.     
-        QS = false;                      // reset the Quantified Self flag for next time    
-  }
-     
   ledFadeToBeat();                      // Makes the LED Fade Effect Happen 
   delay(20); 
 }
@@ -166,5 +145,4 @@ void interrumpe()
     archivo.println(+ "[");
     delay(5000);
 }
-
 
