@@ -15,8 +15,8 @@ int fadePin = 5;                  // pin to do fancy classy fading blink at each
 int fadeRate = 0;                 // used to fade LED on with PWM on fadePin
 float tempC;                      // variable para el dato del Sensor
 const int chipSelect = 4;         // Pin para el ChipSelect
-const int botonPin = 8;           // Boton de Pausa para separar datos
-int botonEstado = 0;              //Este es el estado inicial del boton de pausa
+const int btnPin = 8;           // Boton de Pausa para separar datos
+int btnEstado = 0;              //Este es el estado inicial del boton de pausa
                 
 // Volatile Variables, used in the interrupt service routine!
 volatile int BPM;                   // int that holds raw Analog in 0. updated every 2mS
@@ -74,11 +74,20 @@ void setup(){
 void loop()
 {
     serialOutput() ;  
+    btnEstado = digitalRead(btnPin); 
+  
+    if(btnEstado == HIGH)
 
-    temperatura();
-    delay(20);
-    pulso();
-    delay(20);
+    {
+      interrumpe();
+    }
+    else
+    {
+      temperatura();
+      delay(20);
+      pulso();
+      delay(20);
+    }
 
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
