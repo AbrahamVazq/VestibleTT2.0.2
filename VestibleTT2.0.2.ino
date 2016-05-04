@@ -17,7 +17,6 @@ float tempC;                      // variable para el dato del Sensor
 const int chipSelect = 4;         // Pin para el ChipSelect
 const int botonPin = 8;           // Boton de Pausa para separar datos
 int botonEstado = 0;              //Este es el estado inicial del boton de pausa
-int turno;
                 
 // Volatile Variables, used in the interrupt service routine!
 volatile int BPM;                   // int that holds raw Analog in 0. updated every 2mS
@@ -33,34 +32,57 @@ static boolean serialVisual = true;   // Set to 'false' by Default.  Re-set to '
 void setup(){
   pinMode(blinkPin,OUTPUT);         // pin that will blink to your heartbeat!
   pinMode(fadePin,OUTPUT);          // pin that will fade to your heartbeat!
-  Serial.begin(115200);             // we agree to talk fast!
+  pinMode(3,OUTPUT);                // Pin que nos dira si el lector esta en uso
+  pinMode(7,OUTPUT);                 // Recibe la señal de pausa desde el LED
+  pinMode(8,INPUT);                // Boton que envia la señal de pausa 
+  
+  setTime(16,00,00,9,3,2016);       //Incializamos una fecha y hora de referencia
+  Serial.begin(115200);
   interruptSetup();                 // sets up to read Pulse Sensor signal every 2mS 
    // IF YOU ARE POWERING The Pulse Sensor AT VOLTAGE LESS THAN THE BOARD VOLTAGE, 
    // UN-COMMENT THE NEXT LINE AND APPLY THAT VOLTAGE TO THE A-REF PIN
 //   analogReference(EXTERNAL);   
+
+  // Initialize SdFat or print a detailed error message and halt
+  // Use half speed like the native library.
+  // change to SPI_FULL_SPEED for more performance.
+
+  /* Inicializa SdFat */
+  if (!sd.begin(chipSelect, SPI_HALF_SPEED)) 
+  {
+    sd.initErrorHalt();
+  }
+  /*Abre el archivo para escritura la sintaxis se parece mucho a la libreria Nativa SD.h */
+  if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END)) 
+  {
+    sd.errorHalt("Error! no se puede abrir el archivo Temperatura.txt");
+  }
+  /* Si el archivo se abrio correctamente entonces escribe en el */
+  Serial.print("Ahora estamos escribiendo en el Archivo.");
+  archivo.println("-= Temperatura Corporal =-");
+  archivo.println("[");
+  /* Cerramos el archivo*/
+  archivo.close();
+  Serial.println("Archivo Cerrado.");
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////// M A I N ////////////////////////////////////////////////////
+////////////////////////////////////// M A I N //////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //  Where the Magic Happens
 void loop()
 {
-  
-    serialOutput() ;   
-    delay(200);
-    switch(turno)
-    {
-      case 1:
-            temperatura();
-      case 2:
-            pulso();
-    }
-    delay(20);
-  
-}
+    serialOutput() ;  
 
+    temperatura();
+    delay(20);
+    pulso();
+    delay(20);
+
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void ledFadeToBeat(){
@@ -99,11 +121,6 @@ void temperatura()
   /* Datos que se mostraran en consola serial*/
     Serial.print(tempC);
     Serial.print(" Grados Celsius a las ");
-    Serial.print(day(t));
-    Serial.print(+ "-");
-    Serial.print(month(t));
-    Serial.print(+ "-");
-    Serial.print(year(t));
     Serial.print(+ " ");
     Serial.print(hour(t));
     Serial.print(+ ":");
