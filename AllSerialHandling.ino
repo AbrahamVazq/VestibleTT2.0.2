@@ -88,5 +88,3 @@ const int sensorMax = 1024;    // sensor maximum, discovered through experiment
   
   } 
 }
-
-
