@@ -25,7 +25,6 @@ void serialOutputWhenBeatHappens()
     Serial.print("*** Latido Ocurrido *** ");  //ASCII Art Madness
     Serial.print("BPM: ");
     Serial.print(BPM);
-    archivo.println("BPM : "+BPM);
     Serial.print("  ");
  } else
  {
