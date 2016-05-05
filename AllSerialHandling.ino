@@ -36,9 +36,23 @@ void serialOutputWhenBeatHappens()
 //  Sends Data to Pulse Sensor Processing App, Native Mac App, or Third-party Serial Readers. 
 void sendDataToSerial(char symbol, int data )
 {
-    Serial.print(symbol);
 
-    Serial.println(data);                
+        /* Re-abrimos el archivo para lectura */
+    if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END)) 
+    {
+      sd.errorHalt("opening test.txt for write failed");
+    }
+    else
+    {
+      digitalWrite(3, HIGH);
+    }
+  
+    Serial.print(symbol);
+    archivo.println(symbol);
+    Serial.println(data);  
+    archivo.println(data);   
+
+    archivo.close();
 }
 
 

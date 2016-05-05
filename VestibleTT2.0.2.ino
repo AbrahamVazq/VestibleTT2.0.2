@@ -103,9 +103,9 @@ void ledFadeToBeat(){
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 void pulso()
 {
-  if (QS == true){     // A Heartbeat Was Found
-                       // BPM and IBI have been Determined
-                       // Quantified Self "QS" true when arduino finds a heartbeat
+        if (QS == true){                    // A Heartbeat Was Found
+                                           // BPM and IBI have been Determined
+                                           // Quantified Self "QS" true when arduino finds a heartbeat
         fadeRate = 255;         // Makes the LED Fade Effect Happen
                                 // Set 'fadeRate' Variable to 255 to fade LED with pulse
         serialOutputWhenBeatHappens();   // A Beat Happened, Output that to serial.     
@@ -114,17 +114,18 @@ void pulso()
      
   ledFadeToBeat();                      // Makes the LED Fade Effect Happen 
 
-   /* Re-abrimos el archivo para lectura */
-  if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END)) 
-  {
-    sd.errorHalt("opening test.txt for write failed");
-  }
-  else
-  {
-    digitalWrite(3, HIGH);
-  }
-  
-  archivo.println(QS);
+//   /* Re-abrimos el archivo para lectura */
+//  if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END)) 
+//  {
+//    sd.errorHalt("opening test.txt for write failed");
+//  }
+//  else
+//  {
+//    digitalWrite(3, HIGH);
+//  }
+//  
+//  archivo.println();
+//  archivo.close();
   delay(20);                             //  take a break
 }
 
