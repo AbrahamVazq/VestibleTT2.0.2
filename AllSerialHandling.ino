@@ -20,12 +20,28 @@ void serialOutput()
 //  Decides How To OutPut BPM and IBI Data
 void serialOutputWhenBeatHappens()
 {    
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+       /* Re-abrimos el archivo para lectura */
+    if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END)) 
+    {
+      sd.errorHalt("opening test.txt for write failed");
+    }
+    else
+    {
+      digitalWrite(3, HIGH);
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
  if (serialVisual == true)
  {            //  Code to Make the Serial Monitor Visualizer Work
     Serial.print("*** Latido Ocurrido *** ");  //ASCII Art Madness
     Serial.print("BPM: ");
     Serial.print(BPM);
+    archivo.println(BPM);  
     Serial.print("  ");
+    archivo.close();
  } else
  {
         sendDataToSerial('B',BPM);   // send heart rate with a 'B' prefix
@@ -36,25 +52,9 @@ void serialOutputWhenBeatHappens()
 //  Sends Data to Pulse Sensor Processing App, Native Mac App, or Third-party Serial Readers. 
 void sendDataToSerial(char symbol, int data )
 {
-
-        /* Re-abrimos el archivo para lectura */
-    if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END)) 
-    {
-      sd.errorHalt("opening test.txt for write failed");
-    }
-    else
-    {
-      digitalWrite(3, HIGH);
-    }
-  
     Serial.print(symbol);
-    archivo.println(symbol);
     Serial.println(data);  
-    archivo.println(data);   
-
-    archivo.close();
 }
-
 
 //  Code to Make the Serial Monitor Visualizer Work
 void arduinoSerialMonitorVisual(char symbol, int data )
