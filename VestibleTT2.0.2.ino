@@ -163,7 +163,7 @@ void temperatura()
   archivo.print("\"");
   archivo.print(+ " ");
   archivo.print(tempC);
-  archivo.println(+ ",");
+  archivo.print(+ ",");
   
   archivo.close();                // Cierra el archivo para poder ser abierto mas adelante
    delay(1000);
