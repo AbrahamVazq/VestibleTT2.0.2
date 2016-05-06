@@ -18,34 +18,35 @@ const int chipSelect = 4;         // Pin para el ChipSelect
 const int btnPin = 8;           // Boton de Pausa para separar datos
 int btnEstado = 0;              //Este es el estado inicial del boton de pausa
                 
-// Volatile Variables, used in the interrupt service routine!
-volatile int BPM;                   // int that holds raw Analog in 0. updated every 2mS
+// Variables volatiles, usadas en las rutinas de interrupcion
+volatile int BPM;                   // int that holds raw Analog in 0. updated every 2mS 
 volatile int Signal;                // holds the incoming raw data
 volatile int IBI = 600;             // int that holds the time interval between beats! Must be seeded! 
 volatile boolean Pulse = false;     // "True" when User's live heartbeat is detected. "False" when not a "live beat". 
 volatile boolean QS = false;        // becomes true when Arduoino finds a beat.
 
-// Regards Serial OutPut  -- Set This Up to your needs
-static boolean serialVisual = true;   // Set to 'false' by Default.  Re-set to 'true' to see Arduino Serial Monitor ASCII Visual Pulse 
-
+// Consideraciones para el la salida Seral -- Configurable a las necesidades
+static boolean serialVisual = true;   // Inicializado en Falso, configuralo en 'true' para ver en la consola de arduino el puslo en ASCII
+                                      
 
 void setup(){
-  pinMode(blinkPin,OUTPUT);         // pin that will blink to your heartbeat!
-  pinMode(fadePin,OUTPUT);          // pin that will fade to your heartbeat!
+  pinMode(blinkPin,OUTPUT);         // Led en este pin Brillara en un latido
+  pinMode(fadePin,OUTPUT);          // Led en este pin se opacara en un latido
   pinMode(3,OUTPUT);                // Pin que nos dira si el lector esta en uso
-  pinMode(7,OUTPUT);                 // Recibe la señal de pausa desde el LED
-  pinMode(8,INPUT);                // Boton que envia la señal de pausa 
+  pinMode(7,OUTPUT);                // Recibe la señal de pausa desde el LED
+  pinMode(8,INPUT);                 // Boton que envia la señal de pausa 
   
   setTime(16,00,00,9,3,2016);       //Incializamos una fecha y hora de referencia
   Serial.begin(115200);
-  interruptSetup();                 // sets up to read Pulse Sensor signal every 2mS 
-   // IF YOU ARE POWERING The Pulse Sensor AT VOLTAGE LESS THAN THE BOARD VOLTAGE, 
-   // UN-COMMENT THE NEXT LINE AND APPLY THAT VOLTAGE TO THE A-REF PIN
-//   analogReference(EXTERNAL);   
+  interruptSetup();                 // Inicia la lectura del Sensor de pulso cada 2m
 
-  // Initialize SdFat or print a detailed error message and halt
-  // Use half speed like the native library.
-  // change to SPI_FULL_SPEED for more performance.
+  /*Si estas alimentando el Sensor de Pulso con un voltaje menor del que maneja Arduino Leonardo
+   Descomenta la siguiente linea y aplica el voltaje en el pin A-REF
+         analogReference(EXTERNAL); */
+
+  /* Inicializa el mudulo SD por medio de la libreria SdFat, imprimira el error en caso de encontrarlo
+     usa la velocidad media como la libreria nativa
+     Cambia a SPI_FULL_SPEED si es necesario para mejorar la funcion. */
 
   /* Inicializa SdFat */
   if (!sd.begin(chipSelect, SPI_HALF_SPEED)) 
@@ -59,10 +60,10 @@ void setup(){
   }
   /* Si el archivo se abrio correctamente entonces escribe en el */
   Serial.print("Ahora estamos escribiendo en el Archivo.");
-  archivo.println("-= Temperatura Corporal =-");
-  archivo.println("[");
+  archivo.println("-= Temperatura Corporal =-");            // Escribe al inicio del archivo la leyenda dentro
+  archivo.println("[");                                     // Escribe al inicio del archivo un corchete abierto
   /* Cerramos el archivo*/
-  archivo.close();
+  archivo.close();            
   Serial.println("Archivo Cerrado.");
 }
 
@@ -95,26 +96,26 @@ void loop()
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void ledFadeToBeat(){
-    fadeRate -= 15;                         //  set LED fade value
-    fadeRate = constrain(fadeRate,0,255);   //  keep LED fade value from going into negative numbers!
-    analogWrite(fadePin,fadeRate);          //  fade LED
+    fadeRate -= 15;                         // Inicializa el valor de opacidad del LED
+    fadeRate = constrain(fadeRate,0,255);   // Mantiene la opacidad del led teniendo valores negativos
+    analogWrite(fadePin,fadeRate);          // Opaca el LED
   }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 void pulso()
 {
-        if (QS == true){                    // A Heartbeat Was Found
-                                           // BPM and IBI have been Determined
-                                           // Quantified Self "QS" true when arduino finds a heartbeat
-        fadeRate = 255;         // Makes the LED Fade Effect Happen
-                                // Set 'fadeRate' Variable to 255 to fade LED with pulse
-        serialOutputWhenBeatHappens();   // A Beat Happened, Output that to serial.     
-        QS = false;                      // reset the Quantified Self flag for next time    
+        if (QS == true){                 // A Heartbeat Was Found // Un latido ha sido detectado
+                                         // BPM and IBI have been Determined // 
+                                         // Quantified Self "QS" true when arduino finds a heartbeat
+        fadeRate = 255;                  // Opaca el led
+                                         // Asigna a la variable 'fadeRate' el valor 255 para opcar el LED en cada pulso
+        serialOutputWhenBeatHappens();   // Un pulso ha ocurrido, y se muestra en la consola
+        QS = false;                      // Reinicia el valor de la bandera para la siguiente ocacion 
   }
      
-  ledFadeToBeat();                      // Makes the LED Fade Effect Happen 
+  ledFadeToBeat();                       // Funcion que hace que el opacado del LED ocurra
 
-  delay(20);                             //  take a break
+  delay(20);                             // Duerme 20 mS
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
