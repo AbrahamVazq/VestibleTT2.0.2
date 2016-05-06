@@ -73,19 +73,19 @@ void setup(){
 //  Where the Magic Happens
 void loop()
 {
-    serialOutput() ;  
-    btnEstado = digitalRead(btnPin); 
+    serialOutput() ;                      // Funcion que manda a llamar los datos a la consola
+    btnEstado = digitalRead(btnPin);      // variable que contiene el valor analogico del boton de pausa
   
-    if(btnEstado == HIGH)
-
+    if(btnEstado == HIGH)                 // Si el boton es presionado llama a la funcion interrumpe
     {
-      interrumpe();
+      interrumpe();                       // La funcion interrumpe pausa por 5 segundos la lecutra de los datos 
+                                          // el tiempo puede cambiar segun se requiera
     }
     else
     {
-      temperatura();
-      delay(20);
-      pulso();
+      temperatura();                      // Funcion que hace la rutina de leer del sensor de temperatura
+      delay(20);                          // Duerme 20mS
+      pulso();                            // Funcion que hace la rutina de leer del sensor de pulso
       delay(20);
     }
 
@@ -114,18 +114,6 @@ void pulso()
      
   ledFadeToBeat();                      // Makes the LED Fade Effect Happen 
 
-//   /* Re-abrimos el archivo para lectura */
-//  if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END)) 
-//  {
-//    sd.errorHalt("opening test.txt for write failed");
-//  }
-//  else
-//  {
-//    digitalWrite(3, HIGH);
-//  }
-//  
-//  archivo.println();
-//  archivo.close();
   delay(20);                             //  take a break
 }
 
@@ -140,7 +128,8 @@ void temperatura()
 
   /* Convierte el valor a temperatura*/
     tempC = (5.0 * tempC * 100.0)/1024.0;
-  /* Datos que se mostraran en consola serial*/
+  /* Datos que se mostraran en consola serial.
+      Los datos se imprimen unicamente en la cosola de Arduino*/
     Serial.print(tempC);
     Serial.print(" Grados Celsius a las ");
     Serial.print(+ " ");
@@ -151,18 +140,19 @@ void temperatura()
     Serial.print(second(t));
     Serial.print("\n");
     
-    
    /* Re-abrimos el archivo para lectura */
   if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END)) 
   {
     sd.errorHalt("opening test.txt for write failed");
+    digitalWrite(3, LOW);
   }
   else
   {
     digitalWrite(3, HIGH);
   }
   
-  /*Si el archivo se abrio correctamente, escribimos en el */
+  /*Si el archivo se abrio correctamente, escribimos en el.
+    Los datos se imprimen en el archivo.*/
   Serial.print("La lectura sensa: ");
   archivo.print("\"");
   archivo.print(hour(t));
@@ -174,8 +164,8 @@ void temperatura()
   archivo.print(+ " ");
   archivo.print(tempC);
   archivo.println(+ ",");
-
-  archivo.close();
+  
+  archivo.close();                // Cierra el archivo para poder ser abierto mas adelante
    delay(1000);
 }
 
@@ -183,15 +173,15 @@ void temperatura()
 
 void interrumpe()
 {
-    digitalWrite(7, HIGH);
-    delay(500);
-    digitalWrite(7,LOW);
-    Serial.println(+ "]");
+    digitalWrite(7, HIGH);        // Enciende el LED en el pin 7
+    delay(500);                   // Duerme 500 mS
+    digitalWrite(7,LOW);          // Apaga el LED en el pin 7
+    Serial.println(+ "]");        // Imprime en consola el caracter de corchete cerrado
     Serial.println("Pausando escritura de Archivo en un bloque e iniciando otro.");
-    Serial.println(+ "[");
-    archivo.println(+ "]");
-    archivo.println(+ "[");
-    delay(5000);
+    Serial.println(+ "[");      
+    archivo.println(+ "]");       // Imprime en el ARCHIVO un corchete Cerrado
+    archivo.println(+ "[");       // Imprime en el ARCHIVO un corchete Abierto
+    delay(5000);                  // Duerme 5 segundos
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
