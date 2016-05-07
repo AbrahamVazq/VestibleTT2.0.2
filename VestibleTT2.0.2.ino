@@ -4,11 +4,11 @@
 #include <Time.h>
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*Creamos objetos de la clase SdFat */
-SdFat sd;
-SdFile archivo;
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+SdFat sd;                         // Creamos un objeto de la clase SdFat llamado sd
+SdFile archivo;                   // Creamos un objeto de la clase SdFile llamado archivo
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Variables
-int pulsePin = A0;                // Pulse Sensor purple wire connected to analog pin 0
+int pulsePin = A0;                // Pin donde va conectado el cable de señal del sensor de pulso (Cable purpura)
 int tempPin = A2;                 // Definimos la entrada anlogica en pin A0 
 int blinkPin = 13;                // Pin donde el LED sera el primero en iniciar el brillo
 int fadePin = 5;                  // Pin que simulara el efecto del latido en cada brillo
@@ -16,16 +16,17 @@ int fadeRate = 0;                 // Variable usada para opacar el led en un pin
 float tempC;                      // variable para el dato del Sensor
 const int chipSelect = 4;         // Pin para el ChipSelect
 const int btnPin = 8;             // Pin donde esta conectado un boton de Pausa para separar datos
-int btnEstado = 0;                //Este es el estado inicial del boton de pausa
+int btnEstado = 0;                // Este es el estado inicial del boton de pausa
                 
 // Variables volatiles, usadas en las rutinas de interrupcion
-volatile int BPM;                   // int that holds raw Analog in 0. updated every 2mS  // Variable entera que recibe el dato que detecta el Sensor de pulso antes de ser tratado cada 2mS
-volatile int Signal;                // holds the incoming raw data // Mantiene el dato entrante 
+volatile int BPM;                   // Variable entera que recibe el dato que detecta el Sensor de pulso antes de ser tratado cada 2mS
+volatile int Signal;                // Variable que mantiene el dato entrante 
 volatile int IBI = 600;             // Variable del intervalo de tiempo entre cada beat, Must be seeded!
-volatile boolean Pulse = false;     // Variable que se vuelve 'true' cuando se ha detectado el latido del usuario "vivo" es falso cuando el latido no es de un cuerpo vivo*
-volatile boolean QS = false;        // Variable que se vuelve 'true' cuando el arduino encuentra un pulso 
+volatile boolean Pulse = false;     // Variable se vuelve 'true' cuando se ha detectado el latido del usuario "vivo",
+                                    // falso cuando el latido no es de un cuerpo vivo*
+volatile boolean QS = false;        // Variable se vuelve 'true' cuando el arduino encuentra un pulso 
 
-// Consideraciones para el la salida Seral -- Configurable a las necesidades
+// Consideraciones para la salida Seral --> ( Configurable a las necesidades )
 static boolean serialVisual = true;   // Inicializado en Falso, configuralo en 'true' para ver en la consola de arduino el puslo en ASCII
                                       
 
@@ -49,21 +50,21 @@ void setup(){
      Cambia a SPI_FULL_SPEED si es necesario para mejorar la funcion. */
 
   /* Inicializa SdFat */
-  if (!sd.begin(chipSelect, SPI_HALF_SPEED)) 
+  if (!sd.begin(chipSelect, SPI_HALF_SPEED))   // Si sd.begin no se peude inicializar lanza el error
   {
-    sd.initErrorHalt();
+    sd.initErrorHalt();                        // Funcion que delata el error de detecion y lectura del modulo SD
   }
   /*Abre el archivo para escritura la sintaxis se parece mucho a la libreria Nativa SD.h */
-  if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END)) 
+  if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END))     // Compara si el archivo se ha abierto si no, lanza el error
   {
-    sd.errorHalt("Error! no se puede abrir el archivo Temperatura.txt");
+    sd.errorHalt("Error! no se puede abrir el archivo Temperatura.txt"); // Imprime un error de incapacidad para abrir el archivo
   }
   /* Si el archivo se abrio correctamente entonces escribe en el */
   Serial.print("Ahora estamos escribiendo en el Archivo.");
   archivo.println("-= Temperatura Corporal =-");            // Escribe al inicio del archivo la leyenda dentro
   archivo.println("[");                                     // Escribe al inicio del archivo un corchete abierto
-  /* Cerramos el archivo*/
-  archivo.close();            
+  
+  archivo.close();                                          // Funcion que cierra el Archivo
   Serial.println("Archivo Cerrado.");
 }
 
@@ -71,7 +72,6 @@ void setup(){
 ////////////////////////////////////// M A I N //////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//  Where the Magic Happens
 void loop()
 {
     serialOutput() ;                      // Funcion que manda a llamar los datos a la consola
@@ -91,6 +91,7 @@ void loop()
     }
 
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,9 +143,9 @@ void temperatura()
     Serial.print("\n");
     
    /* Re-abrimos el archivo para lectura */
-  if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END)) 
+   if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END))     // Compara si el archivo se ha abierto si no, lanza el error
   {
-    sd.errorHalt("opening test.txt for write failed");
+    sd.errorHalt("Error! no se puede abrir el archivo Temperatura.txt"); // Imprime un error de incapacidad para abrir el archivo
     digitalWrite(3, LOW);
   }
   else
@@ -185,5 +186,3 @@ void interrumpe()
     delay(5000);                  // Duerme 5 segundos
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-

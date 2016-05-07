@@ -5,47 +5,46 @@
 /////////  Set it to 'true' or 'false' when it's declared at start of code.  
 /////////
 
-void serialOutput()
-{   // Decide How To Output Serial. 
- if (serialVisual == true)
- {  
-     arduinoSerialMonitorVisual('-', Signal);   // goes to function that makes Serial Monitor Visualizer
- } else
- {
-      sendDataToSerial('S', Signal);     // goes to sendDataToSerial function
- }        
+void serialOutput()                             // Funcion que decide como sera la salida en la consola Serial.
+{   
+   if (serialVisual == true)
+   {  
+       arduinoSerialMonitorVisual('-', Signal);   // goes to function that makes Serial Monitor Visualizer  // hace que la funcion se muestre en la consola
+   } else
+   {
+        sendDataToSerial('S', Signal);            // goes to sendDataToSerial function // Hace que la señal con el valor entero se muestre en consola
+   }        
 }
 
-
-//  Decides How To OutPut BPM and IBI Data
-void serialOutputWhenBeatHappens()
+void serialOutputWhenBeatHappens()               // Funcion que decide como sera la salida de las variables BPM y IBI
 {    
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
-       /* Re-abrimos el archivo para lectura */
-    if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END)) 
-    {
-      sd.errorHalt("opening test.txt for write failed");
-    }
-    else
-    {
-      digitalWrite(3, HIGH);
-    }
+/* Re-abrimos el archivo para lectura */
+
+   if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END))     // Compara si el archivo se ha abierto si no, lanza el error
+  {
+    sd.errorHalt("Error! no se puede abrir el archivo Temperatura.txt"); // Imprime un error de incapacidad para abrir el archivo
+    digitalWrite(3, LOW);
+  }
+  else
+  {
+    digitalWrite(3, HIGH);
+  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
- if (serialVisual == true)
- {            //  Code to Make the Serial Monitor Visualizer Work
-    Serial.print("*** Latido Ocurrido *** ");  //ASCII Art Madness
+ if (serialVisual == true)                     // Compara si serialVisual es true para poder imprimir en consola el contenido del If
+ {  
+    Serial.print("*** Latido Ocurrido *** ");  //ASCII Que se imprime unicamente en la consola
     Serial.print("BPM: ");
     Serial.print(BPM);
-    archivo.print(BPM); 
-    archivo.println(+ ","); 
+    archivo.print(BPM);                        // Guarda en el archivo el valor numerico de la variable BPM
+    archivo.println(+ ",");     
     Serial.print("  ");
-    archivo.close();
+    archivo.close();  
  } else
  {
-        sendDataToSerial('B',BPM);   // send heart rate with a 'B' prefix
+        sendDataToSerial('B',BPM);   // send heart rate with a 'B' prefix 
         sendDataToSerial('Q',IBI);   // send time between beats with a 'Q' prefix
  }   
 }
