@@ -10,20 +10,20 @@ SdFile archivo;
 //  Variables
 int pulsePin = A0;                // Pulse Sensor purple wire connected to analog pin 0
 int tempPin = A2;                 // Definimos la entrada anlogica en pin A0 
-int blinkPin = 13;                // pin to blink led at each beat
-int fadePin = 5;                  // pin to do fancy classy fading blink at each beat
-int fadeRate = 0;                 // used to fade LED on with PWM on fadePin
+int blinkPin = 13;                // Pin donde el LED sera el primero en iniciar el brillo
+int fadePin = 5;                  // Pin que simulara el efecto del latido en cada brillo
+int fadeRate = 0;                 // Variable usada para opacar el led en un pin con PWM
 float tempC;                      // variable para el dato del Sensor
 const int chipSelect = 4;         // Pin para el ChipSelect
-const int btnPin = 8;           // Boton de Pausa para separar datos
-int btnEstado = 0;              //Este es el estado inicial del boton de pausa
+const int btnPin = 8;             // Pin donde esta conectado un boton de Pausa para separar datos
+int btnEstado = 0;                //Este es el estado inicial del boton de pausa
                 
 // Variables volatiles, usadas en las rutinas de interrupcion
-volatile int BPM;                   // int that holds raw Analog in 0. updated every 2mS 
-volatile int Signal;                // holds the incoming raw data
-volatile int IBI = 600;             // int that holds the time interval between beats! Must be seeded! 
-volatile boolean Pulse = false;     // "True" when User's live heartbeat is detected. "False" when not a "live beat". 
-volatile boolean QS = false;        // becomes true when Arduoino finds a beat.
+volatile int BPM;                   // int that holds raw Analog in 0. updated every 2mS  // Variable entera que recibe el dato que detecta el Sensor de pulso antes de ser tratado cada 2mS
+volatile int Signal;                // holds the incoming raw data // Mantiene el dato entrante 
+volatile int IBI = 600;             // Variable del intervalo de tiempo entre cada beat, Must be seeded!
+volatile boolean Pulse = false;     // Variable que se vuelve 'true' cuando se ha detectado el latido del usuario "vivo" es falso cuando el latido no es de un cuerpo vivo*
+volatile boolean QS = false;        // Variable que se vuelve 'true' cuando el arduino encuentra un pulso 
 
 // Consideraciones para el la salida Seral -- Configurable a las necesidades
 static boolean serialVisual = true;   // Inicializado en Falso, configuralo en 'true' para ver en la consola de arduino el puslo en ASCII
