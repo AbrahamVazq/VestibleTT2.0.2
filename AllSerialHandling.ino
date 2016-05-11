@@ -18,18 +18,18 @@ void serialOutput()                             // Funcion que decide como sera 
 
 void serialOutputWhenBeatHappens()               // Funcion que decide como sera la salida de las variables BPM y IBI
 {    
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* Re-abrimos el archivo para lectura */
-
-   if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END))     // Compara si el archivo se ha abierto si no, lanza el error
-  {
-    sd.errorHalt("Error! no se puede abrir el archivo Temperatura.txt"); // Imprime un error de incapacidad para abrir el archivo
-    digitalWrite(3, LOW);
-  }
-  else
-  {
-    digitalWrite(3, HIGH);
-  }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+///* Re-abrimos el archivo para lectura */
+//
+//   if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END))     // Compara si el archivo se ha abierto si no, lanza el error
+//  {
+//    sd.errorHalt("Error! no se puede abrir el archivo Temperatura.txt"); // Imprime un error de incapacidad para abrir el archivo
+//    digitalWrite(3, LOW);
+//  }
+//  else
+//  {
+//    digitalWrite(3, HIGH);
+//  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
