@@ -30,7 +30,11 @@ volatile boolean QS = false;        // Variable se vuelve 'true' cuando el ardui
 static boolean serialVisual = true;   // Inicializado en Falso, configuralo en 'true' para ver en la consola de arduino el puslo en ASCII
                                       
 
-void setup(){
+void setup()
+{
+
+  while (!Serial) {} 
+  
   pinMode(blinkPin,OUTPUT);         // Led en este pin Brillara en un latido
   pinMode(fadePin,OUTPUT);          // Led en este pin se opacara en un latido
   pinMode(3,OUTPUT);                // Pin que nos dira si el lector esta en uso
@@ -96,26 +100,26 @@ void loop()
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void ledFadeToBeat(){
+void ledFadeToBeat()
+{
     fadeRate -= 15;                         // Inicializa el valor de opacidad del LED
     fadeRate = constrain(fadeRate,0,255);   // Mantiene la opacidad del led teniendo valores negativos
     analogWrite(fadePin,fadeRate);          // Opaca el LED
-  }
-
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 void pulso()
 {
-        if (QS == true){                 // A Heartbeat Was Found // Un latido ha sido detectado
-                                         // BPM and IBI have been Determined // 
-                                         // Quantified Self "QS" true when arduino finds a heartbeat
-        fadeRate = 255;                  // Opaca el led
-                                         // Asigna a la variable 'fadeRate' el valor 255 para opcar el LED en cada pulso
-        serialOutputWhenBeatHappens();   // Un pulso ha ocurrido, y se muestra en la consola
-        QS = false;                      // Reinicia el valor de la bandera para la siguiente ocacion 
-  }
+    if (QS == true)
+    {                 // A Heartbeat Was Found // Un latido ha sido detectado
+                                       // BPM and IBI have been Determined // 
+                                       // Quantified Self "QS" true when arduino finds a heartbeat
+      fadeRate = 255;                  // Opaca el led
+                                       // Asigna a la variable 'fadeRate' el valor 255 para opcar el LED en cada pulso
+      serialOutputWhenBeatHappens();   // Un pulso ha ocurrido, y se muestra en la consola
+      QS = false;                      // Reinicia el valor de la bandera para la siguiente ocacion 
+    }
      
   ledFadeToBeat();                       // Funcion que hace que el opacado del LED ocurra
-
   delay(20);                             // Duerme 20 mS
 }
 
@@ -166,13 +170,11 @@ void temperatura()
   archivo.print(+ " ");
   archivo.print(tempC);
   archivo.print(+ ",");
-  
   archivo.close();                // Cierra el archivo para poder ser abierto mas adelante
    delay(1000);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 void interrumpe()
 {
     digitalWrite(7, HIGH);        // Enciende el LED en el pin 7

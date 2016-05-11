@@ -10,7 +10,8 @@ void serialOutput()                             // Funcion que decide como sera 
    if (serialVisual == true)
    {  
        arduinoSerialMonitorVisual('-', Signal);   // goes to function that makes Serial Monitor Visualizer  // hace que la funcion se muestre en la consola
-   } else
+   } 
+   else
    {
         sendDataToSerial('S', Signal);            // goes to sendDataToSerial function // Hace que la señal con el valor entero se muestre en consola
    }        
@@ -18,20 +19,6 @@ void serialOutput()                             // Funcion que decide como sera 
 
 void serialOutputWhenBeatHappens()               // Funcion que decide como sera la salida de las variables BPM y IBI
 {    
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-///* Re-abrimos el archivo para lectura */
-//
-//   if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END))     // Compara si el archivo se ha abierto si no, lanza el error
-//  {
-//    sd.errorHalt("Error! no se puede abrir el archivo Temperatura.txt"); // Imprime un error de incapacidad para abrir el archivo
-//    digitalWrite(3, LOW);
-//  }
-//  else
-//  {
-//    digitalWrite(3, HIGH);
-//  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
 
  if (serialVisual == true)                     // Compara si serialVisual es true para poder imprimir en consola el contenido del If
  {  
@@ -42,15 +29,16 @@ void serialOutputWhenBeatHappens()               // Funcion que decide como sera
     }
     else
     {
-    Serial.print("*** Latido Ocurrido *** ");  //ASCII Que se imprime unicamente en la consola
-    Serial.print("BPM: ");
-    Serial.print(BPM);
-    archivo.print(BPM);                        // Guarda en el archivo el valor numerico de la variable BPM
-    archivo.println(+ ",");     
-    Serial.print("  ");
-    archivo.close();  
+      Serial.print("*** Latido Ocurrido *** ");  //ASCII Que se imprime unicamente en la consola
+      Serial.print("BPM: ");
+      Serial.print(BPM);
+      archivo.print(BPM);                        // Guarda en el archivo el valor numerico de la variable BPM
+      archivo.println(+ ",");     
+      Serial.print("  ");
+      archivo.close();  
     }
- } else
+ } 
+ else
  {
         sendDataToSerial('B',BPM);   // send heart rate with a 'B' prefix 
         sendDataToSerial('Q',IBI);   // send time between beats with a 'Q' prefix
@@ -68,52 +56,49 @@ void sendDataToSerial(char symbol, int data )
 void arduinoSerialMonitorVisual(char symbol, int data )
 {    
   const int sensorMin = 0;      // sensor minimum, discovered through experiment
-const int sensorMax = 1024;    // sensor maximum, discovered through experiment
+  const int sensorMax = 1024;    // sensor maximum, discovered through experiment
 
   int sensorReading = data;
   // map the sensor range to a range of 12 options:
   int range = map(sensorReading, sensorMin, sensorMax, 0, 11);
 
-  // do something different depending on the 
-  // range value:
-  switch (range) 
+  switch (range)                // Dependiendo del rango en los valores imprime los casos
   {
-  case 0:     
-    Serial.println("");     /////ASCII Art Madness
-    break;
-  case 1:   
-    Serial.println("---");
-    break;
-  case 2:    
-    Serial.println("------");
-    break;
-  case 3:    
-    Serial.println("---------");
-    break;
-  case 4:   
-    Serial.println("------------");
-    break;
-  case 5:   
-    Serial.println("--------------|-");
-    break;
-  case 6:   
-    Serial.println("--------------|---");
-    break;
-  case 7:   
-    Serial.println("--------------|-------");
-    break;
-  case 8:  
-    Serial.println("--------------|----------");
-    break;
-  case 9:    
-    Serial.println("--------------|----------------");
-    break;
-  case 10:   
-    Serial.println("--------------|-------------------");
-    break;
-  case 11:   
-    Serial.println("--------------|-----------------------");
-    break;
-  
+    case 0:     
+      Serial.println("");     /////ASCII Art Madness
+      break;
+    case 1:   
+      Serial.println("---");
+      break;
+    case 2:    
+      Serial.println("------");
+      break;
+    case 3:    
+      Serial.println("---------");
+      break;
+    case 4:   
+      Serial.println("------------");
+      break;
+    case 5:   
+      Serial.println("--------------|-");
+      break;
+    case 6:   
+      Serial.println("--------------|---");
+      break;
+    case 7:   
+      Serial.println("--------------|-------");
+      break;
+    case 8:  
+      Serial.println("--------------|----------");
+      break;
+    case 9:    
+      Serial.println("--------------|----------------");
+      break;
+    case 10:   
+      Serial.println("--------------|-------------------");
+      break;
+    case 11:   
+      Serial.println("--------------|-----------------------");
+      break;
   } 
 }
