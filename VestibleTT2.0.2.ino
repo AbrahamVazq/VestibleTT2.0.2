@@ -2,6 +2,7 @@
 #include <SPI.h>
 #include <SdFat.h>
 #include <Time.h>
+#include <Arduino.h>
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*Creamos objetos de la clase SdFat */
 SdFat sd;                         // Creamos un objeto de la clase SdFat llamado sd
