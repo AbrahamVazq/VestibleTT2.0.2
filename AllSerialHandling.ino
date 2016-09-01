@@ -22,14 +22,14 @@ void serialOutputWhenBeatHappens()               // Funcion que decide como sera
 
  if (serialVisual == true)                     // Compara si serialVisual es true para poder imprimir en consola el contenido del If
  {  
-    if(!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END))
+    if(!archivo.open("Temperatura.bin", O_RDWR | O_CREAT | O_AT_END))
     {
-      sd.errorHalt("Error! no se puede abrir el archivo Temperatura.txt");
+      sd.errorHalt("Error! no se puede abrir el archivo Temperatura.bin");
       digitalWrite(3, LOW);
     }
     else
     {
-      Serial.print("*** Latido Ocurrido *** ");  //ASCII Que se imprime unicamente en la consola
+      Serial.print("*Latido Ocurrido* ");  //ASCII Que se imprime unicamente en la consola
       Serial.print("BPM: ");
       Serial.print(BPM);
       archivo.print(BPM);                        // Guarda en el archivo el valor numerico de la variable BPM

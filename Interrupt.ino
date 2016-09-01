@@ -11,7 +11,6 @@ volatile boolean firstBeat = true;        // used to seed rate array so we start
 volatile boolean secondBeat = false;      // used to seed rate array so we startup with reasonable BPM
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 void interruptSetup()
 {
           TCCR1A = 0x00;
@@ -19,8 +18,7 @@ void interruptSetup()
           OCR1A = 0x7C;  // count to 124  
           TIMSK1 = 0x02; 
           sei();
-      }
-
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // THIS IS THE TIMER 2 INTERRUPT SERVICE ROUTINE. 
@@ -65,7 +63,6 @@ ISR(TIMER1_COMPA_vect){
         sei();                               // enable interrupts again
         return;                              // IBI value is unreliable so discard it
       }   
-
 
       // keep a running total of the last 10 IBI values
       word runningTotal = 0;                  // clear the runningTotal variable    

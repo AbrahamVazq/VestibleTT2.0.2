@@ -16,7 +16,7 @@ int fadePin = 5;                  // Pin que simulara el efecto del latido en ca
 int fadeRate = 0;                 // Variable usada para opacar el led en un pin con PWM
 float tempC;                      // variable para el dato del Sensor
 const int chipSelect = 4;         // Pin para el ChipSelect
-const int btnPin = 8;             // Pin donde esta conectado un boton de Pausa para separar datos
+const int btnPin = 8;             // Pin donde esta conectado un boton de Pausa para separar datosº
 int btnEstado = 0;                // Este es el estado inicial del boton de pausa
                 
 // Variables volatiles, usadas en las rutinas de interrupcion
@@ -30,12 +30,11 @@ volatile boolean QS = false;        // Variable se vuelve 'true' cuando el ardui
 // Consideraciones para la salida Seral --> ( Configurable a las necesidades )
 static boolean serialVisual = true;   // Inicializado en Falso, configuralo en 'true' para ver en la consola de arduino el puslo en ASCII
                                       
-
 void setup()
 {
 
   while (!Serial) {} 
-  
+    
   pinMode(blinkPin,OUTPUT);         // Led en este pin Brillara en un latido
   pinMode(fadePin,OUTPUT);          // Led en este pin se opacara en un latido
   pinMode(3,OUTPUT);                // Pin que nos dira si el lector esta en uso
@@ -60,23 +59,21 @@ void setup()
     sd.initErrorHalt();                        // Funcion que delata el error de detecion y lectura del modulo SD
   }
   /*Abre el archivo para escritura la sintaxis se parece mucho a la libreria Nativa SD.h */
-  if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END))     // Compara si el archivo se ha abierto si no, lanza el error
+  if (!archivo.open("Lecturas.bin", O_RDWR | O_CREAT | O_AT_END))     // Compara si el archivo se ha abierto si no, lanza el error
   {
-    sd.errorHalt("Error! no se puede abrir el archivo Temperatura.txt"); // Imprime un error de incapacidad para abrir el archivo
+    sd.errorHalt("Error! no se puede abrir el archivo intenta de nuevo."); // Imprime un error de incapacidad para abrir el archivo
   }
   /* Si el archivo se abrio correctamente entonces escribe en el */
   Serial.print("Ahora estamos escribiendo en el Archivo.");
-  archivo.println("-= Temperatura Corporal =-");            // Escribe al inicio del archivo la leyenda dentro
+  //archivo.println("-= Temperatura Corporal =-");            // Escribe al inicio del archivo la leyenda dentro
   archivo.println("[");                                     // Escribe al inicio del archivo un corchete abierto
   
   archivo.close();                                          // Funcion que cierra el Archivo
   Serial.println("Archivo Cerrado.");
 }
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////// M A I N //////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-
 void loop()
 {
     serialOutput() ;                      // Funcion que manda a llamar los datos a la consola
@@ -94,13 +91,10 @@ void loop()
       pulso();                            // Funcion que hace la rutina de leer del sensor de pulso
       delay(20);
     }
-
 }
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-
 void ledFadeToBeat()
 {
     fadeRate -= 15;                         // Inicializa el valor de opacidad del LED
@@ -111,21 +105,18 @@ void ledFadeToBeat()
 void pulso()
 {
     if (QS == true)
-    {                 // A Heartbeat Was Found // Un latido ha sido detectado
+    {                                  // Un latido ha sido detectado
                                        // BPM and IBI have been Determined // 
                                        // Quantified Self "QS" true when arduino finds a heartbeat
-      fadeRate = 255;                  // Opaca el led
-                                       // Asigna a la variable 'fadeRate' el valor 255 para opcar el LED en cada pulso
+      fadeRate = 255;                  // Opaca el led, asigna a la variable 'fadeRate' el valor 255 para opcar el LED en cada pulso
       serialOutputWhenBeatHappens();   // Un pulso ha ocurrido, y se muestra en la consola
       QS = false;                      // Reinicia el valor de la bandera para la siguiente ocacion 
     }
      
   ledFadeToBeat();                       // Funcion que hace que el opacado del LED ocurra
-  delay(20);                             // Duerme 20 mS
+  delay(2);                             // Duerme 20 mS
 }
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-
 void temperatura()
 {
    /*Creamos una objeto t de la clase tiempo */
@@ -148,9 +139,9 @@ void temperatura()
     Serial.print("\n");
     
    /* Re-abrimos el archivo para lectura */
-   if (!archivo.open("Temperatura.txt", O_RDWR | O_CREAT | O_AT_END))     // Compara si el archivo se ha abierto si no, lanza el error
+   if (!archivo.open("Temperatura.bin", O_RDWR | O_CREAT | O_AT_END))     // Compara si el archivo se ha abierto si no, lanza el error
   {
-    sd.errorHalt("Error! no se puede abrir el archivo Temperatura.txt"); // Imprime un error de incapacidad para abrir el archivo
+    sd.errorHalt("Error! no se puede abrir el archivo"); // Imprime un error de incapacidad para abrir el archivo
     digitalWrite(3, LOW);
   }
   else
@@ -174,7 +165,6 @@ void temperatura()
   archivo.close();                // Cierra el archivo para poder ser abierto mas adelante
    delay(1000);
 }
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 void interrumpe()
 {
@@ -186,6 +176,6 @@ void interrumpe()
     Serial.println(+ "[");      
     archivo.println(+ "]");       // Imprime en el ARCHIVO un corchete Cerrado
     archivo.println(+ "[");       // Imprime en el ARCHIVO un corchete Abierto
-    delay(5000);                  // Duerme 5 segundos
+    delay(10000);                  // Duerme 5 segundos
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
